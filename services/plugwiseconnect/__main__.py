@@ -70,4 +70,7 @@ def run():
 
     broker.start(True)
 
-run()
+try:
+    run()
+except KeyboardInterrupt:
+    info("Shutting down ...")
