@@ -1,0 +1,9 @@
+{
+	"permanent_path": "../../logs/datalog",
+	"tmp_path": "/tmp",
+	"log_path": "../../logs/datalog",
+	"serial": "/dev/cu.usbserial-AH01HYRV",
+	"log_format": "epoch",
+	"mqtt_ip": "127.0.0.1",
+	"mqtt_port": "1883"
+}

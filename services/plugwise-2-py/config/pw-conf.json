@@ -1,0 +1,13 @@
+{
+	"static": [
+		{
+			"mac": "000D6F00036BB2D5",
+			"category": "misc",
+			"name": "circle+",
+			"loginterval": "1",
+			"always_on": "True",
+			"production": "True",
+			"location": "hall"
+		}
+	]
+}

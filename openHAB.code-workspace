@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/__pycache__": true
+		},
+		"editor.formatOnSave": false,
+		"editor.formatOnType": false,
+		"editor.formatOnSaveMode": "modificationsIfAvailable",
+		"python.formatting.provider": "yapf",
+		"python.formatting.autopep8Path": "",
+		"python.formatting.autopep8Args": [
+			"--max-line-length 120",
+			"--ignore errors E402"
+		],
+		"python.linting.enabled": true,
+	}
+}

@@ -1,0 +1,15 @@
+{
+	"dynamic": [
+		{
+			"mac": "000D6F00036BB2D5",
+			"switch_state": "on",
+			"name": "Circle+",
+			"schedule_state": "off",
+			"schedule": "",
+			"savelog": "yes",
+			"monitor": "yes"
+		}
+	],
+	"log_level": "info",
+	"log_comm": "no"
+}

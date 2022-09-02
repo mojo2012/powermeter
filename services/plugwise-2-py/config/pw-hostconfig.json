@@ -1,0 +1,7 @@
+{
+	"permanent_path": "/Users/matthias.fuchs/Projekte/Privat/openHAB/logs/datalog",
+	"tmp_path": "/Users/matthias.fuchs/Projekte/Privat/openHAB/logs/datalog/",
+	"log_path": "/Users/matthias.fuchs/Projekte/Privat/openHAB/logs/datalog",
+	"serial": "/dev/cu.usbserial-AH01HYRV",
+	"log_format": "epoch"
+}

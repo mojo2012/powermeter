@@ -1,0 +1,13 @@
+# Folders
+/nongit
+
+#misc
+get-pip.py
+config/*.json
+*.pyc
+*.log
+*.out
+*.pem
+build/lib/plugwise/__init__.py
+.DS_Store
+__pycache__
