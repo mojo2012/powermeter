@@ -245,18 +245,18 @@ class Stick(SerialComChannel):
                         ackresp = PlugwiseAckAssociationResponse()
                         ackresp.unserialize(msg)
                         
-                        info("unknown MAC associating [1] %s" % logf(ackresp.mac))
+                        info("Unknown MAC associating [1] %s" % logf(ackresp.mac))
                     else:
                         logcomm("RERR %4d %s - <!> out of sequence: %s" % (len(msg), logf(msg), str(reason)))
                         
-                        error("out of sequence error [2]:" + str(reason))
+                        error("Out of sequence error [2]: " + str(reason))
                 #Reinterpretation of response should never raise ProtocolError or UnexpectedResponse
                 #OutOfSequenceException is suppressed bu not passing seqnr in Response constructor
                 except (OutOfSequenceException, ChecksumError, UnexpectedResponse) as reason:
                     #retry to receive the response
                     logcomm("RERR %4d %s - <!> error while reinterpreting out of sequence response: %s" %
                             (len(msg), logf(msg), str(reason)))
-                    error("error while reinterpreting out of sequence response:" + str(reason))
+                    error("Error while reinterpreting out of sequence response: " + str(reason))
 
             except UnexpectedResponse as reason:
                 #response could be an error status message
@@ -326,7 +326,7 @@ class Stick(SerialComChannel):
                     logcomm("RERR %4d %s - <!> error while reinterpreting unexpected response: %s" %
                             (len(msg), logf(msg), str(reason)))
                     error("Error while reinterpreting  unexpected response:" + str(reason))
-            error("TEST: %s - going to retry receive msg" % (logf(resp.function_code),))
+            # error("TEST: %s - going to retry receive msg" % (logf(resp.function_code),))
 
     def enable_joining(self, enabled):
         req = PlugwiseEnableJoiningRequest(b'', enabled)

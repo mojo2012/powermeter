@@ -16,12 +16,14 @@
 	},
 	"devices": [
 		{
+			"type": "PlugwiseCircle",
 			"macAddress": "000D6F00036BB2D5",
 			"name": "Circle+",
 			"category": "home",
 			"master": true
 		},
 		{
+			"type": "PlugwiseCircle",
 			"macAddress": "000D6F0003539D31",
 			"name": "Circle",
 			"category": "home",
