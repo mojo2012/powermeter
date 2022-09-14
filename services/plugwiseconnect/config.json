@@ -1,7 +1,7 @@
 {
-	"serialPort": "/dev/cu.usbserial-AH01HYRV",
+	"serialPort": "/dev/ttyUSB0",
 	"serialPortMacAddress": "000D6F00028FCC5B",
-	"readInterval": 1,
+	"readInterval": 5,
 	"logLevel": "INFO",
 	"storageLocation": "../../logs/plugwiseconnect/",
 	"listeners": {
