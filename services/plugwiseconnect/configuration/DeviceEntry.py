@@ -1,4 +1,8 @@
+from configuration.DeviceType import DeviceType
+
+
 class DeviceEntry:
+    type: DeviceType
     macAddress: str
     name: str
     category: str
