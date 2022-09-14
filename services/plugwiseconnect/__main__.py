@@ -54,21 +54,21 @@ def run():
 
     info("Starting plugwiseconnect")
 
-    broker = PlugwiseBroker(config)
+    plugwiseBroker = PlugwiseBroker(config)
 
     if config.storageFileLocation:
-        broker.registerObserver(SqLiteStorageObserver(config.storageFileLocation))
+        plugwiseBroker.registerObserver(SqLiteStorageObserver(config.storageFileLocation))
 
     if config.listeners is not None:
         if config.listeners.http is not None:
-            broker.registerObserver(HttpClientObserver(config.listeners.http))
+            plugwiseBroker.registerObserver(HttpClientObserver(config.listeners.http))
 
         if config.listeners.mqtt is not None:
-            broker.registerObserver(MqttClientObserver(config.listeners.mqtt))
+            plugwiseBroker.registerObserver(MqttClientObserver(config.listeners.mqtt))
 
-    broker.registerObserver(LoggingObserver())
+    plugwiseBroker.registerObserver(LoggingObserver())
 
-    broker.start(True)
+    plugwiseBroker.start(True)
 
 try:
     run()

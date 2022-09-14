@@ -26,7 +26,7 @@
 			"cwd": "${workspaceFolder}/services/plugwiseconnect/",
 			"args": [
 				"--config",
-				"./config.json"
+				"./config_dev.json"
 			],
 			"pathMappings": [],
 			"console": "internalConsole",

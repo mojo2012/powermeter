@@ -1,0 +1,36 @@
+{
+	"serialPort": "/dev/cu.usbserial-AH01HYRV",
+	"serialPortMacAddress": "000D6F00028FCC5B",
+	"readInterval": 1,
+	"logLevel": "INFO",
+	"storageLocation": "../../logs/plugwiseconnect/",
+	"listeners": {
+		"http": {
+			"url": "https://postman-echo.com/post",
+			"authorization": "Bearer 324567890"
+		},
+		"mqtt": {
+			"host": "localhost",
+			"port": 1883
+		}
+	},
+	"devices": [
+		{
+			"type": "Dummy",
+			"macAddress": "000D6F00036BB2D5",
+			"name": "Circle+",
+			"category": "home",
+			"master": true
+		},
+		{
+			"type": "Dummy",
+			"macAddress": "000D6F0003539D31",
+			"name": "Circle",
+			"category": "home",
+			"master": false
+		}
+	],
+	"httpServer": {
+		"port": 8001
+	}
+}

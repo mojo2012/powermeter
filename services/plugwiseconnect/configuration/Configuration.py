@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from typing import List
 
 from configuration.DeviceEntry import DeviceEntry
+from configuration.DeviceType import DeviceType
 from configuration.HttpServerConfig import HttpServerConfig
 from configuration.Listeners import Listeners
 
@@ -46,7 +47,7 @@ class Configuration:
                 Path(os.path.join(Path(storageLocation), Path("usageData.sqlite"))).resolve().absolute())
 
         for device in config.devices:
-            self.devices.append(DeviceEntry(device.macAddress, device.name, device.category, device.master))
+            self.devices.append(DeviceEntry(device.macAddress, device.name, DeviceType[device.type], device.category, device.master))
 
 def readConfig(rootPath: str, configFilePath: str):
     """

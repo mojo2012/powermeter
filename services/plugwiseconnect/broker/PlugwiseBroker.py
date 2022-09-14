@@ -6,6 +6,7 @@ from typing import Dict, List
 from broker import Observer
 from configuration.Configuration import Configuration
 from configuration.DeviceEntry import DeviceEntry
+from configuration.DeviceType import DeviceType
 from plugwise.api import Circle, Stick
 
 
@@ -58,34 +59,37 @@ class PlugwiseBroker:
         self._serialPort.enable_joining(True)
 
         for device in self._config.devices:
-            try:
-                config = self.createCircleConfiguration(device)
-                node = Circle(device.macAddress, self._serialPort, config)
-                self._registeredNodes[device.macAddress] = node
+            if device.type == DeviceType.PlugwiseCircle:
+                try:
+                    config = self.createCircleConfiguration(device)
+                    node = Circle(device.macAddress, self._serialPort, config)
+                    self._registeredNodes[device.macAddress] = node
 
-                if device.master:
-                    info(f'Connnecting to master node \'{device.macAddress}\' ...')
-                    self._registeredMasterNode = node
-                    nodeInfo = node.get_info()
-                    info(f'Connnected to master node \'{device.macAddress}\'')
+                    if device.master:
+                        info(f'Connnecting to master node \'{device.macAddress}\' ...')
+                        self._registeredMasterNode = node
+                        nodeInfo = node.get_info()
+                        info(f'Connnected to master node \'{device.macAddress}\'')
 
-                    now = datetime.utcnow() - timedelta(seconds=time.timezone)
-                    node.set_circleplus_datetime(now)
+                        now = datetime.utcnow() - timedelta(seconds=time.timezone)
+                        node.set_circleplus_datetime(now)
 
-                    node.set_log_interval(self._config.readInterval, True)
+                        node.set_log_interval(self._config.readInterval, True)
 
-                if not device.master:
-                    info(f'Connnecting to secondary node \'{device.macAddress}\' ...')
+                    if not device.master:
+                        info(f'Connnecting to secondary node \'{device.macAddress}\' ...')
 
-                    self._serialPort.join_node(device.macAddress, True)
-                    time.sleep(30)
-                    nodeInfo = node.get_info()
+                        self._serialPort.join_node(device.macAddress, True)
+                        time.sleep(30)
+                        nodeInfo = node.get_info()
 
-                    info(f'Connnected to secondary node \'{device.macAddress}\'')
+                        info(f'Connnected to secondary node \'{device.macAddress}\'')
 
-            except Exception as ex:
-                error(f'Could not connect to {device.name} ({device.macAddress}): {ex}')
-                pass
+                except Exception as ex:
+                    error(f'Could not connect to {device.name} ({device.macAddress}): {ex}')
+                    pass
+            else:
+                info("Ignoring unknown device with unsupported type")
 
         self._serialPort.enable_joining(False)
 
@@ -132,27 +136,36 @@ class PlugwiseBroker:
     def registerObserver(self, observer: Observer):
         self._observers.append(observer)
 
+    def checkIfSupportedNodesAvailable(self) -> bool:
+        supportedDevices = list(filter(lambda d: d.type == DeviceType.PlugwiseCircle, self._config.devices))
+
+        return len(supportedDevices) > 0
+
+
     def start(self, observeNodes: bool):
-        portConnected = self.connectToSerialPort()
+        if self.checkIfSupportedNodesAvailable() == True:
+            portConnected = self.connectToSerialPort()
 
-        if portConnected:
-            self.connectToNodes()
+            if portConnected:
+                self.connectToNodes()
 
-            info("Plugwise broker started")
+                info("Plugwise broker started")
 
-            infosPrinted = False
+                infosPrinted = False
 
-            while True:
-                for macAddress in self._registeredNodes.keys():
-                    node: Circle = self._registeredNodes[macAddress]
+                while True:
+                    for macAddress in self._registeredNodes.keys():
+                        node: Circle = self._registeredNodes[macAddress]
 
-                    if not infosPrinted:
-                        infosPrinted = True
-                        nodeInfo = node.get_info()
-                        info(f'Node info for {node.name} ({node.mac}): {nodeInfo}')
+                        if not infosPrinted:
+                            infosPrinted = True
+                            nodeInfo = node.get_info()
+                            info(f'Node info for {node.name} ({node.mac}): {nodeInfo}')
 
-                    if observeNodes:
-                        self.updateNodeState(node)
+                        if observeNodes:
+                            self.updateNodeState(node)
 
-                # time.sleep(self._config.readInterval)
-                time.sleep(10)
+                    # time.sleep(self._config.readInterval)
+                    time.sleep(10)
+        else:
+            warn("Plugwise broker: no supported devices")
