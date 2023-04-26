@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pip install plugwise aiohttp sqlite_utils
+pip install requests async_timeout defusedxml pyserial python-dateutil semver serial sqlite_utils

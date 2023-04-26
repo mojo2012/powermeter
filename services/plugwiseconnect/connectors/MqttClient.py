@@ -1,2 +1,2 @@
-class MqttClient
+class MqttClient:
 	pass
