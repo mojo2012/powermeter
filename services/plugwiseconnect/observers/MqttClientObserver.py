@@ -43,7 +43,7 @@ class MqttClientObserver(Observer):
             usageData: usageData
         }
 
-        payload = json.dumps(payload)
+        payload = json.dumps(payload, default=vars)
 
         self._client.publish("plugwise", payload)
 
