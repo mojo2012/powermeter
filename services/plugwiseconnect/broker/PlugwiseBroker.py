@@ -134,6 +134,7 @@ class PlugwiseBroker:
             error(f'Could not get power usage data from {node.name}: {node.mac}: {str(ex)}')
 
     def registerObserver(self, observer: Observer):
+        debug(f'Registering new observer: {observer}')
         self._observers.append(observer)
 
     def checkIfSupportedNodesAvailable(self) -> bool:

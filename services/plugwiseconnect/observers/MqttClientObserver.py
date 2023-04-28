@@ -1,6 +1,9 @@
 import paho.mqtt.client as mqtt
 from logging import debug
 
+from logging import info
+from logging import error
+
 from broker.Observer import Observer
 from broker.UsageData import UsageData
 from configuration.DeviceEntry import DeviceEntry
@@ -15,6 +18,8 @@ class MqttClientObserver(Observer):
     _client: mqtt.Client
 
     def __init__(self, config: MqttClientConfig):
+        info(f'Starting MQTT client for {config.host}:{config.port}')
+
         self._host = config.host
         self._port = config.port
 
@@ -23,13 +28,18 @@ class MqttClientObserver(Observer):
         self._client.on_message = self.onMessage
 
         self._client.loop_start()
-        self._client.connect(self._host, self._port, 60)
 
-        # Blocking call that processes network traffic, dispatches callbacks and
-        # handles reconnecting.
-        # Other loop*() functions are available that give a threaded interface and a
-        # manual interface.
-        self._client.loop_forever()
+        try:
+            self._client.connect(self._host, self._port, 60)
+
+            # Blocking call that processes network traffic, dispatches callbacks and
+            # handles reconnecting.
+            # Other loop*() functions are available that give a threaded interface and a
+            # manual interface.
+            self._client.loop_forever()
+        except:
+            error(f'Could not connect to MQTT server {config.host}:{config.port}')
+
 
     def onUsageDataUodate(self, device: DeviceEntry, usageData: UsageData):
         debug(f'Power usage for {device.name} ({device.macAddress}): {usageData}')
@@ -45,7 +55,7 @@ class MqttClientObserver(Observer):
 
     # The callback for when the client receives a CONNACK response from the server.
     def onConnect(self, client, userdata, flags, rc):
-        debug(f'Connected to MQTT server: result code={rc}')
+        info(f'Connected to MQTT server: result code={rc}')
 
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
