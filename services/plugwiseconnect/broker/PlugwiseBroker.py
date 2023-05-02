@@ -148,7 +148,13 @@ class PlugwiseBroker:
             portConnected = self.connectToSerialPort()
 
             if portConnected:
-                self.connectToNodes()
+                connected = False
+                while not connected:
+                    try:
+                        self.connectToNodes()
+                        connected = True
+                    except:
+                        info("Failed to connect to nodes - retrying ...")
 
                 info("Plugwise broker started")
 
