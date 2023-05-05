@@ -16,6 +16,8 @@ from observers.SqLiteStorageObserver import SqLiteStorageObserver
 
 ROOT_PATH = str(Path(__file__).parent.absolute())
 
+plugwiseBroker: PlugwiseBroker
+
 def initArgParse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         usage="%(prog)s --config [CONFIG FILE]",
@@ -75,7 +77,12 @@ def run():
 
 def handleSigInt(signal, frame):
     print("Quitting ...")
+    plugwiseBroker.enabled = False
+    
     sys.exit(0)
 
 # starting up
-run()
+try:
+    run()
+except KeyboardInterrupt:
+    handleSigInt(None, None)
