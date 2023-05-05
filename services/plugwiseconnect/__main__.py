@@ -76,7 +76,7 @@ try:
 
         plugwiseBroker.start(True)
 
-    def handleSigInt(signal, frame):
+    def handleSigInt(_signal, _frame):
         print("Quitting ...")
         plugwiseBroker.enabled = False
         
