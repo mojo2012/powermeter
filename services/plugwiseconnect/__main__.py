@@ -80,7 +80,7 @@ try:
         print("Quitting ...")
         plugwiseBroker.enabled = False
         
-        sys.exit(0)
+        os.kill(os.getpid(), signal.SIGINT)
 
     # starting up
 
