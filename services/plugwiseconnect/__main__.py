@@ -1,3 +1,4 @@
+import sys, signal
 import argparse
 import logging
 import os
@@ -45,6 +46,8 @@ def setupLogging(config: Configuration):
     pass
 
 def run():
+    signal.signal(signal.SIGINT, handleSigInt)
+
     programArguments = initArgParse().parse_args()
     configFileArg: str = os.path.abspath(programArguments.config[0])
 
@@ -70,7 +73,9 @@ def run():
 
     plugwiseBroker.start(True)
 
-try:
-    run()
-except KeyboardInterrupt:
-    info("Shutting down ...")
+def handleSigInt(signal, frame):
+    print("Quitting ...")
+    sys.exit(0)
+
+# starting up
+run()
