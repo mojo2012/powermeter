@@ -151,7 +151,7 @@ class PlugwiseBroker:
 
             if portConnected:
                 connected = False
-                while not connected and self.enabled:
+                while self.enabled and not connected:
                     try:
                         self.connectToNodes()
                         connected = True
@@ -162,22 +162,19 @@ class PlugwiseBroker:
 
                 infosPrinted = False
 
-                try:
-                    while self.enabled:
-                        for macAddress in self._registeredNodes.keys():
-                            node: Circle = self._registeredNodes[macAddress]
+                while self.enabled:
+                    for macAddress in self._registeredNodes.keys():
+                        node: Circle = self._registeredNodes[macAddress]
 
-                            if not infosPrinted:
-                                infosPrinted = True
-                                nodeInfo = node.get_info()
-                                info(f'Node info for {node.name} ({node.mac}): {nodeInfo}')
+                        if not infosPrinted:
+                            infosPrinted = True
+                            nodeInfo = node.get_info()
+                            info(f'Node info for {node.name} ({node.mac}): {nodeInfo}')
 
-                            if observeNodes:
-                                self.updateNodeState(node)
+                        if observeNodes:
+                            self.updateNodeState(node)
 
-                        # time.sleep(self._config.readInterval)
-                        time.sleep(10)
-                except KeyboardInterrupt:
-                    info("Quitting ...")
+                    # time.sleep(self._config.readInterval)
+                    time.sleep(10)
         else:
             warn("Plugwise broker: no supported devices")
