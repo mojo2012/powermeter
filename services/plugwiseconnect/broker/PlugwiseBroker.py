@@ -1,3 +1,4 @@
+import threading
 import time
 from datetime import datetime, timedelta
 from logging import debug, error, info, warn
@@ -23,7 +24,7 @@ class PlugwiseBroker:
 
     _observers: List[Observer] = []
 
-    enabled = True
+    _enabled = threading.Event()
 
     def __init__(self, config: Configuration):
         self._config = config
@@ -144,14 +145,21 @@ class PlugwiseBroker:
 
         return len(supportedDevices) > 0
 
+    def setEnabled(self, value: bool):
+        if value:
+            self._enabled.set()
+        else:
+            self._enabled.clear()
 
     def start(self, observeNodes: bool):
+        self._enabled.set()
+
         if self.checkIfSupportedNodesAvailable() == True:
             portConnected = self.connectToSerialPort()
 
             if portConnected:
                 connected = False
-                while self.enabled and not connected:
+                while self._enabled.is_set() and not connected:
                     try:
                         self.connectToNodes()
                         connected = True
@@ -162,7 +170,7 @@ class PlugwiseBroker:
 
                 infosPrinted = False
 
-                while self.enabled:
+                while self._enabled.is_set():
                     for macAddress in self._registeredNodes.keys():
                         node: Circle = self._registeredNodes[macAddress]
 

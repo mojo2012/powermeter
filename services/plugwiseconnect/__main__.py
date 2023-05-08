@@ -1,11 +1,12 @@
+import sys, signal
+import argparse
+import logging
+import os
+import sys
+from logging import info
+from pathlib import Path
+
 try:
-    import sys, signal
-    import argparse
-    import logging
-    import os
-    import sys
-    from logging import info
-    from pathlib import Path
 
     from broker import PlugwiseBroker
     from configuration.Configuration import Configuration, readConfig
@@ -78,13 +79,16 @@ try:
 
     def handleSigInt(_signal, _frame):
         print("Quitting ...")
-        plugwiseBroker.enabled = False
+        plugwiseBroker.setEnabled(False)
         
         os.kill(os.getpid(), signal.SIGINT)
+        sys.exit(0)
 
     # starting up
 
     run()
 except KeyboardInterrupt:
     # handleSigInt(None, None)
+    print("Keyboard interrupt ...")
+    os.kill(os.getpid(), signal.SIGINT)
     sys.exit(0)
