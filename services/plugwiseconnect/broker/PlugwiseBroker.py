@@ -155,13 +155,11 @@ class PlugwiseBroker:
                 connected = False
 
                 while self.enabled and not connected:
-                    info(f'Enabled: {self.enabled}')
-
                     try:
                         self.connectToNodes()
                         connected = True
-                    except:
-                        info("Failed to connect to nodes - retrying ...")
+                    except Exception as ex:
+                        info(f"Failed to connect to nodes ({str(ex)}) - retrying ...")
 
                 info("Plugwise broker started")
 
