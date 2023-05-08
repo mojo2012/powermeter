@@ -3,11 +3,10 @@ import argparse
 import logging
 import os
 import sys
-from logging import info
+from logging import info, debug
 from pathlib import Path
 
 try:
-
     from broker import PlugwiseBroker
     from configuration.Configuration import Configuration, readConfig
     from log.CustomFormatter import CustomFormatter
@@ -18,77 +17,78 @@ try:
 
     ROOT_PATH = str(Path(__file__).parent.absolute())
 
-    plugwiseBroker: PlugwiseBroker
+    class PlugwiseConnect:
 
-    def initArgParse() -> argparse.ArgumentParser:
-        parser = argparse.ArgumentParser(
-            usage="%(prog)s --config [CONFIG FILE]",
-            description="Starts the plugwise connect utility",
-        )
+        plugwiseBroker: PlugwiseBroker
 
-        parser.add_argument("--config", action="append")
+        def __init__(self):
+            signal.signal(signal.SIGINT, self.handleSigInt)
 
-        return parser
+        def initArgParse(self) -> argparse.ArgumentParser:
+            parser = argparse.ArgumentParser(
+                usage="%(prog)s --config [CONFIG FILE]",
+                description="Starts the plugwise connect utility",
+            )
 
-    def setupLogging(config: Configuration):
-        streamHandler = logging.StreamHandler(sys.stdout)
-        streamHandler.formatter = CustomFormatter()
+            parser.add_argument("--config", action="append")
 
-        logger = logging.getLogger()
+            return parser
 
-        if "DEBUG" == config.logLevel:
-            logger.setLevel(logging.DEBUG)
-        elif "INFO" == config.logLevel:
-            logger.setLevel(logging.INFO)
-        elif "WARNING" == config.logLevel:
-            logger.setLevel(logging.WARNING)
-        elif "ERROR" == config.logLevel:
-            logger.setLevel(logging.ERROR)
+        def setupLogging(self, config: Configuration):
+            streamHandler = logging.StreamHandler(sys.stdout)
+            streamHandler.formatter = CustomFormatter()
 
-        logger.addHandler(streamHandler)
+            logger = logging.getLogger()
 
-        pass
+            if "DEBUG" == config.logLevel:
+                logger.setLevel(logging.DEBUG)
+            elif "INFO" == config.logLevel:
+                logger.setLevel(logging.INFO)
+            elif "WARNING" == config.logLevel:
+                logger.setLevel(logging.WARNING)
+            elif "ERROR" == config.logLevel:
+                logger.setLevel(logging.ERROR)
 
-    def run():
-        signal.signal(signal.SIGINT, handleSigInt)
+            logger.addHandler(streamHandler)
 
-        programArguments = initArgParse().parse_args()
-        configFileArg: str = os.path.abspath(programArguments.config[0])
+            pass
 
-        config = readConfig(ROOT_PATH, configFileArg)
+        def run(self):
+            programArguments = self.initArgParse().parse_args()
+            configFileArg: str = os.path.abspath(programArguments.config[0])
 
-        setupLogging(config)
+            config = readConfig(ROOT_PATH, configFileArg)
 
-        info("Starting plugwiseconnect")
+            self.setupLogging(config)
 
-        plugwiseBroker = PlugwiseBroker(config)
+            info("Starting plugwiseconnect")
 
-        if config.storageFileLocation:
-            plugwiseBroker.registerObserver(SqLiteStorageObserver(config.storageFileLocation))
+            self.plugwiseBroker = PlugwiseBroker(config)
 
-        if config.listeners is not None:
-            if config.listeners.http is not None:
-                plugwiseBroker.registerObserver(HttpClientObserver(config.listeners.http))
+            if config.storageFileLocation:
+                self.plugwiseBroker.registerObserver(SqLiteStorageObserver(config.storageFileLocation))
 
-            if config.listeners.mqtt is not None:
-                plugwiseBroker.registerObserver(MqttClientObserver(config.listeners.mqtt))
+            if config.listeners is not None:
+                if config.listeners.http is not None:
+                    self.plugwiseBroker.registerObserver(HttpClientObserver(config.listeners.http))
 
-        plugwiseBroker.registerObserver(LoggingObserver())
+                if config.listeners.mqtt is not None:
+                    self.plugwiseBroker.registerObserver(MqttClientObserver(config.listeners.mqtt))
 
-        plugwiseBroker.start(True)
+            self.plugwiseBroker.registerObserver(LoggingObserver())
 
-    def handleSigInt(_signal, _frame):
-        print("Quitting ...")
-        plugwiseBroker.setEnabled(False)
-        
-        os.kill(os.getpid(), signal.SIGINT)
-        sys.exit(0)
+            self.plugwiseBroker.start(True)
+
+        def handleSigInt(self, _signal, _frame):
+            info("Quitting ...")
+            # self.plugwiseBroker.setEnabled(False)
+            
+            os.kill(os.getpid(), signal.SIGKILL)
 
     # starting up
 
-    run()
+    PlugwiseConnect().run()
 except KeyboardInterrupt:
-    # handleSigInt(None, None)
-    print("Keyboard interrupt ...")
-    os.kill(os.getpid(), signal.SIGINT)
-    sys.exit(0)
+    debug("Keyboard interrupt: quitting ... ")
+    os.kill(os.getpid(), signal.SIGKILL)
+

@@ -152,14 +152,17 @@ class PlugwiseBroker:
             self._enabled.clear()
 
     def start(self, observeNodes: bool):
-        self._enabled.set()
+        self.setEnabled(True)
 
         if self.checkIfSupportedNodesAvailable() == True:
             portConnected = self.connectToSerialPort()
 
             if portConnected:
                 connected = False
+
                 while self._enabled.is_set() and not connected:
+                    info(f'Enabled: {self._enabled.is_set()}')
+
                     try:
                         self.connectToNodes()
                         connected = True
