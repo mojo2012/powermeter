@@ -24,7 +24,7 @@ class PlugwiseBroker:
 
     _observers: List[Observer] = []
 
-    _enabled = threading.Event()
+    enabled = False
 
     def __init__(self, config: Configuration):
         self._config = config
@@ -145,14 +145,8 @@ class PlugwiseBroker:
 
         return len(supportedDevices) > 0
 
-    def setEnabled(self, value: bool):
-        if value:
-            self._enabled.set()
-        else:
-            self._enabled.clear()
-
     def start(self, observeNodes: bool):
-        self.setEnabled(True)
+        self.enabled = True
 
         if self.checkIfSupportedNodesAvailable() == True:
             portConnected = self.connectToSerialPort()
@@ -160,8 +154,8 @@ class PlugwiseBroker:
             if portConnected:
                 connected = False
 
-                while self._enabled.is_set() and not connected:
-                    info(f'Enabled: {self._enabled.is_set()}')
+                while self.enabled and not connected:
+                    info(f'Enabled: {self.enabled}')
 
                     try:
                         self.connectToNodes()
@@ -173,7 +167,7 @@ class PlugwiseBroker:
 
                 infosPrinted = False
 
-                while self._enabled.is_set():
+                while self.enabled:
                     for macAddress in self._registeredNodes.keys():
                         node: Circle = self._registeredNodes[macAddress]
 
