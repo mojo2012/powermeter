@@ -23,6 +23,7 @@
 
 import logging
 import logging.handlers
+from typing import Union
 
 import serial
 from serial.serialutil import SerialException
@@ -82,7 +83,7 @@ def logcomm(msg):
 class SerialComChannel(object):
     """simple wrapper around serial module"""
 
-    _fd: serial.Serial
+    _fd: Union[serial.Serial, None] = None
 
     def __init__(self, port="/dev/ttyUSB0", baud=115200, bits=8, stop=1, parity='N', timeout=5):
         self.connected = False
@@ -110,7 +111,7 @@ class SerialComChannel(object):
         if self._fd == None:
             self.open()
         else:
-            if(self._fd.isOpen() == False):
+            if(self._fd and self._fd.isOpen() == False):
                 self._fd.open()
 
     def close(self):

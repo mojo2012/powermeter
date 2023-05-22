@@ -6,6 +6,16 @@ import sys
 from logging import info, debug
 from pathlib import Path
 
+def registerProcessIdInFile():
+    deleteProcessIdInFile()
+
+    with open('.pid', 'w', encoding='utf-8') as pidFile:
+        pidFile.write(str(os.getpid()))
+        
+def deleteProcessIdInFile():
+    if os.path.exists(".pid"):
+        os.remove(".pid")
+
 try:
     from broker import PlugwiseBroker
     from configuration.Configuration import Configuration, readConfig
@@ -54,6 +64,8 @@ try:
             pass
 
         def run(self):
+            registerProcessIdInFile();
+
             programArguments = self.initArgParse().parse_args()
             configFileArg: str = os.path.abspath(programArguments.config[0])
 
@@ -81,8 +93,7 @@ try:
 
         def handleSigInt(self, _signal, _frame):
             info("Quitting ...")
-            # self.plugwiseBroker.setEnabled(False)
-            
+            deleteProcessIdInFile()
             os.kill(os.getpid(), signal.SIGKILL)
 
     # starting up
@@ -90,5 +101,6 @@ try:
     PlugwiseConnect().run()
 except KeyboardInterrupt:
     debug("Keyboard interrupt: quitting ... ")
+    deleteProcessIdInFile()
     os.kill(os.getpid(), signal.SIGKILL)
 

@@ -38,7 +38,7 @@ class PlugwiseBroker:
         serialPortDeviceString = self._config.serialPort
 
         # the serial port is actually a string, but the Stick class is wrong here, it defines it as an int
-        self._serialPort = Stick(serialPortDeviceString, self._config.serialPortMacAddress, timeout=1)  # type: ignore
+        self._serialPort = Stick(serialPortDeviceString, self._config.serialPortMacAddress, timeout=3)  # type: ignore
 
         count = 0
         maxCount = 10

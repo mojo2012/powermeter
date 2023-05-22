@@ -142,3 +142,4 @@ dmypy.json
 .pyre/
 logs/*
 data/mosquitto/data/mosquitto.db
+services/plugwiseconnect/.pid
