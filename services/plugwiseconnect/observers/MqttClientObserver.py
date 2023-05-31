@@ -38,10 +38,10 @@ class MqttClientObserver(Observer):
     def onUsageDataUodate(self, device: DeviceEntry, usageData: UsageData):
         debug(f'Power usage for {device.name} ({device.macAddress}): {usageData}')
 
-        self._client.publish("plugwise/" + device.macAddress + "/watts_1s", usageData.watts_1s)
-        self._client.publish("plugwise/" + device.macAddress + "/watts_8s", usageData.watts_8s)
-        self._client.publish("plugwise/" + device.macAddress + "/watts_1h", usageData.watts_1h)
-        self._client.publish("plugwise/" + device.macAddress + "/watts_production_1h", usageData.watts_production_1h)
+        self._client.publish("smartplug/plugwise/" + device.macAddress + "/watts_1s", usageData.watts_1s)
+        self._client.publish("smartplug/plugwise/" + device.macAddress + "/watts_8s", usageData.watts_8s)
+        self._client.publish("smartplug/plugwise/" + device.macAddress + "/watts_1h", usageData.watts_1h)
+        self._client.publish("smartplug/plugwise/" + device.macAddress + "/watts_production_1h", usageData.watts_production_1h)
 
     # The callback for when the client receives a CONNACK response from the server.
     def onConnect(self, client, userdata, flags, rc):
