@@ -151,7 +151,11 @@ class PlugwiseCircleBroker(Broker):
                     if device.switch_state == 'on':
                         SwitchState.ON
 
-                    usageData = UsageData(power = usage.watts_1s, switchState = switchState)
+                    usageData = UsageData(
+                        unix_timestamp = time.time(), 
+                        power = usage.watts_1s,
+                        switchState = switchState
+                    )
 
                     return usageData
                 else:
