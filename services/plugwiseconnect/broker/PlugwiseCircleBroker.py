@@ -148,7 +148,7 @@ class PlugwiseCircleBroker(Broker):
                     usage = device.get_power_usage()
                     switchState = SwitchState.OFF
 
-                    if device.switch_state == 'on':
+                    if device.relay_state == 'on':
                         SwitchState.ON
 
                     usageData = UsageData(
