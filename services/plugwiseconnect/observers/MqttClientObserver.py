@@ -21,7 +21,7 @@ class MqttClientObserver(Observer):
 
     __MQTT_PATH = "smartplug/"
 
-    __UPDATE_MESSAGE_TOPIC_PATH_REGEX = re.compile(r"smartplug\/plugwise\/([a-zA-Z0-9\.\-\_]*)\/state")
+    __UPDATE_MESSAGE_TOPIC_PATH_REGEX = re.compile(r"smartplug\/([a-zA-Z0-9\.\-\_]*)\/state")
 
     _host: str
     _port: int
