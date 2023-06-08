@@ -71,6 +71,8 @@ class PlugwiseCircleBroker(Broker):
                 config = self.createCircleConfiguration(device)
                 node = Circle(device.address, self._serialPort, config)
 
+                self._registeredDevices[device.address] = node
+
                 self._registededConfigEntries[device.address] = device
                 self._registeredNodes[device.address] = node
 
