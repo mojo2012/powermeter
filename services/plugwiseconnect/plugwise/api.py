@@ -37,7 +37,7 @@ from logging import *
 
 from serial.serialutil import SerialException
 
-from broker.UsageData import UsageData
+from broker.PlugWiseUsageData import PlugWiseUsageData
 from plugwise.exceptions import *
 from plugwise.protocol import *
 from plugwise.swutil import *
@@ -689,7 +689,7 @@ class Circle(object):
             pp1h = 0
         return (p1s, p8s, p1h, pp1h)
 
-    def get_power_usage(self) -> UsageData:
+    def get_power_usage(self) -> PlugWiseUsageData:
         """returns power usage for the last second in Watts
         might raise ValueError if reading the pulse counters fails
         """
@@ -712,7 +712,7 @@ class Circle(object):
         self.power_ts = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
         #just return negative values. It is production
 
-        return UsageData(
+        return PlugWiseUsageData(
             unix_timestamp=self.power_ts,
             watts_1s=kw_1s,
             watts_8s=kw_8s,

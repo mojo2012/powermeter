@@ -7,5 +7,5 @@ from configuration.DeviceEntry import DeviceEntry
 class Observer:
 
     @abstractmethod
-    def onUsageDataUodate(self, device: DeviceEntry, usageData: UsageData):
+    def onUsageDataUpdate(self, device: DeviceEntry, usageData: UsageData):
         pass

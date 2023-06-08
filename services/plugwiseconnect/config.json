@@ -17,17 +17,41 @@
 	"devices": [
 		{
 			"type": "PlugwiseCircle",
-			"macAddress": "000D6F00036BB2D5",
+			"address": "000D6F00036BB2D5",
 			"name": "Circle+",
 			"category": "home",
-			"master": true
+			"master": true,
+			"capabilities": [
+				"TemperatureSensor",
+				"PowerMeter",
+				"PowerSwitch"
+			]
 		},
 		{
 			"type": "PlugwiseCircle",
-			"macAddress": "000D6F0003539D31",
+			"address": "000D6F0003539D31",
 			"name": "Circle",
 			"category": "home",
-			"master": false
+			"master": false,
+			"capabilities": [
+				"TemperatureSensor",
+				"PowerMeter",
+				"PowerSwitch"
+			]
+		},
+		{
+			"type": "DLinkHNAP1",
+			"address": "10.0.0.113",
+			"name": "D-Link DSP-W215",
+			"username": "admin",
+			"password": "302869",
+			"category": "home",
+			"master": true,
+			"capabilities": [
+				"TemperatureSensor",
+				"PowerMeter",
+				"PowerSwitch"
+			]
 		}
 	],
 	"httpServer": {

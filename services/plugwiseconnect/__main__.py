@@ -1,10 +1,14 @@
+import time
 import sys, signal
 import argparse
 import logging
 import os
 import sys
-from logging import info, debug
+from logging import info, debug, error
 from pathlib import Path
+from typing import List
+
+
 
 def registerProcessIdInFile():
     deleteProcessIdInFile()
@@ -17,7 +21,9 @@ def deleteProcessIdInFile():
         os.remove(".pid")
 
 try:
-    from broker import PlugwiseBroker
+    from broker.Broker import Broker
+    from broker.DLinkHNAP1Broker import DLinkHNAP1Broker
+    from broker.PlugwiseCircleBroker import PlugwiseCircleBroker
     from configuration.Configuration import Configuration, readConfig
     from log.CustomFormatter import CustomFormatter
     from observers.HttpClientObserver import HttpClientObserver
@@ -29,7 +35,7 @@ try:
 
     class PlugwiseConnect:
 
-        plugwiseBroker: PlugwiseBroker
+        brokers: List[Broker] = []
 
         def __init__(self):
             signal.signal(signal.SIGINT, self.handleSigInt)
@@ -75,21 +81,33 @@ try:
 
             info("Starting plugwiseconnect")
 
-            self.plugwiseBroker = PlugwiseBroker(config)
+            self.brokers.append(PlugwiseCircleBroker(config))
+            self.brokers.append(DLinkHNAP1Broker(config))
 
-            if config.storageFileLocation:
-                self.plugwiseBroker.registerObserver(SqLiteStorageObserver(config.storageFileLocation))
+            for broker in self.brokers:
+                if config.storageFileLocation:
+                    broker.registerObserver(SqLiteStorageObserver(config.storageFileLocation))
 
-            if config.listeners is not None:
-                if config.listeners.http is not None:
-                    self.plugwiseBroker.registerObserver(HttpClientObserver(config.listeners.http))
+                if config.listeners is not None:
+                    if config.listeners.http is not None:
+                        broker.registerObserver(HttpClientObserver(config.listeners.http))
 
-                if config.listeners.mqtt is not None:
-                    self.plugwiseBroker.registerObserver(MqttClientObserver(config.listeners.mqtt))
+                    if config.listeners.mqtt is not None:
+                        broker.registerObserver(MqttClientObserver(config.listeners.mqtt, self.brokers))
 
-            self.plugwiseBroker.registerObserver(LoggingObserver())
+                broker.registerObserver(LoggingObserver())
+                
+                try:
+                    broker.start()
+                except Exception as ex:
+                    error(f"Could not start broker for device type {broker.supportedDeviceType}: {str(ex)}")
 
-            self.plugwiseBroker.start(True)
+            while True:
+                for broker in self.brokers:
+                    broker.fetchAndPublishDeviceStateUpdates()
+                
+                # time.sleep(config.readInterval)
+                time.sleep(15)
 
         def handleSigInt(self, _signal, _frame):
             info("Quitting ...")

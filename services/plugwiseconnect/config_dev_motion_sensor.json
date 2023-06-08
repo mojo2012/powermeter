@@ -1,0 +1,34 @@
+{
+	"serialPort": "/dev/ttyUSB0",
+	"serialPortMacAddress": "000D6F00028FCC5B",
+	"readInterval": 5,
+	"logLevel": "INFO",
+	"storageLocation": "../../logs/plugwiseconnect/",
+	"listeners": {
+		"http": {
+			"url": "https://postman-echo.com/post",
+			"authorization": "Bearer 324567890"
+		},
+		"mqtt": {
+			"host": "10.0.0.109",
+			"port": 1883
+		}
+	},
+	"devices": [
+		{
+			"type": "DLinkHNAP1",
+			"address": "10.0.0.114",
+			"name": "D-Link DCH-S150 (C4-12-F5-17-91-97)",
+			"username": "admin",
+			"password": "371854",
+			"category": "home",
+			"master": true,
+			"capabilities": [
+				"MotionSensor"
+			]
+		}
+	],
+	"httpServer": {
+		"port": 8001
+	}
+}

@@ -16,7 +16,7 @@ class Configuration:
     # in seconds
     readInterval = 60
     serialPort: str
-    serialPortMacAddress: str
+    serialPortAddress: str
     logLevel: str
     storageFileLocation: str
 
@@ -31,7 +31,7 @@ class Configuration:
 
         self.readInterval = config.readInterval
         self.serialPort = config.serialPort
-        self.serialPortMacAddress = config.serialPortMacAddress
+        self.serialPortAddress = config.serialPortMacAddress
         self.logLevel = config.logLevel
 
         if config.listeners:
@@ -47,7 +47,18 @@ class Configuration:
                 Path(os.path.join(Path(storageLocation), Path("usageData.sqlite"))).resolve().absolute())
 
         for device in config.devices:
-            self.devices.append(DeviceEntry(device.macAddress, device.name, DeviceType[device.type], device.category, device.master))
+            username = None
+            password = None
+            capabilities = []
+            
+            if hasattr(device, "password"):
+                password = device.password
+            if hasattr(device, "username"):
+                username = device.username
+            if hasattr(device, "capabilities"):
+                capabilities = device.capabilities
+
+            self.devices.append(DeviceEntry(device.address, device.name, DeviceType[device.type], device.category, device.master, username, password, capabilities))
 
 def readConfig(rootPath: str, configFilePath: str):
     """

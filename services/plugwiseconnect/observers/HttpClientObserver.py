@@ -17,8 +17,8 @@ class HttpClientObserver(Observer):
         self._url = httpConfig.url
         self._authentication = httpConfig.authorization
 
-    def onUsageDataUodate(self, device: DeviceEntry, usageData: UsageData):
-        debug(f'Power usage for {device.name} ({device.macAddress}): {usageData}')
+    def onUsageDataUpdate(self, device: DeviceEntry, usageData: UsageData):
+        debug(f'Power usage for {device.name} ({device.address}): {usageData}')
 
         response = requests.post(url=self._url, headers={"Authorization": self._authentication}, data=usageData.__dict__)
 

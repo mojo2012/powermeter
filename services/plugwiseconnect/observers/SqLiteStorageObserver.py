@@ -24,13 +24,13 @@ class SqLiteStorageObserver(Observer):
 
         self._db = Database(storageLocation, recreate=True)
 
-    def onUsageDataUodate(self, device: DeviceEntry, usageData: UsageData):
-        debug(f'Power usage for {device.name} ({device.macAddress}): {usageData}')
+    def onUsageDataUpdate(self, device: DeviceEntry, usageData: UsageData):
+        debug(f'Power usage for {device.name} ({device.address}): {usageData}')
 
         self._db["usage_data"].insert_all(  # type: ignore
             [{
-                "device_mac": device.macAddress,
-                "timestamp": usageData.isoTimestamp(),
-                "watts": usageData.watts_8s,
+                "device_mac": device.address,
+                "timestamp": usageData.isoTimestamp,
+                "watts": usageData.power,
             }],
             pk=["timestamp", "device_mac"])  # type: ignore

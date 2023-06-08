@@ -1,7 +1,7 @@
 {
-	"serialPort": "/dev/cu.usbserial-AH01HYRV",
+	"serialPort": "/dev/ttyUSB0",
 	"serialPortMacAddress": "000D6F00028FCC5B",
-	"readInterval": 1,
+	"readInterval": 60,
 	"logLevel": "INFO",
 	"storageLocation": "../../logs/plugwiseconnect/",
 	"listeners": {
@@ -10,24 +10,60 @@
 			"authorization": "Bearer 324567890"
 		},
 		"mqtt": {
-			"host": "localhost",
+			"host": "10.0.0.109",
 			"port": 1883
 		}
 	},
 	"devices": [
 		{
-			"type": "Dummy",
-			"macAddress": "000D6F00036BB2D5",
-			"name": "Circle+",
+			"type": "DLinkHNAP1",
+			"address": "10.0.0.113",
+			"name": "D-Link DSP-W215",
+			"username": "admin",
+			"password": "302869",
 			"category": "home",
-			"master": true
+			"master": true,
+			"capabilities": [
+				"TemperatureSensor",
+				"PowerMeter",
+				"PowerSwitch"
+			]
 		},
 		{
-			"type": "Dummy",
-			"macAddress": "000D6F0003539D31",
-			"name": "Circle",
+			"type": "DLinkHNAP1",
+			"address": "10.0.0.114",
+			"name": "D-Link DCH-S150 (C4-12-F5-17-91-97)",
+			"username": "admin",
+			"password": "371854",
 			"category": "home",
-			"master": false
+			"master": true,
+			"capabilities": [
+				"MotionSensor"
+			]
+		},
+		{
+			"type": "DLinkHNAP1",
+			"address": "10.0.0.115",
+			"name": "D-Link DCH-S150 (C4-12-F5-1A-1E-92)",
+			"username": "admin",
+			"password": "536139",
+			"category": "home",
+			"master": true,
+			"capabilities": [
+				"MotionSensor"
+			]
+		},
+		{
+			"type": "DLinkHNAP1",
+			"address": "10.0.0.116",
+			"name": "D-Link DCH-S150 (C4-12-F5-17-91-DA)",
+			"username": "admin",
+			"password": "673491",
+			"category": "home",
+			"master": true,
+			"capabilities": [
+				"MotionSensor"
+			]
 		}
 	],
 	"httpServer": {

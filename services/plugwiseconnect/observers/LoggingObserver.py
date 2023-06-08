@@ -7,6 +7,5 @@ from configuration.DeviceEntry import DeviceEntry
 
 class LoggingObserver(Observer):
 
-    def onUsageDataUodate(self, device: DeviceEntry, usageData: UsageData):
-        watts = "{:.2f} W".format(usageData.watts_1s)
-        info(f'Power usage for {device.name} ({device.macAddress}): {watts}')
+    def onUsageDataUpdate(self, device: DeviceEntry, usageData: UsageData):
+        info(f'Usage for {device.name} ({device.address}): {usageData}')

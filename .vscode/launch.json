@@ -24,6 +24,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/services/plugwiseconnect/__main__.py",
 			"cwd": "${workspaceFolder}/services/plugwiseconnect/",
+			"justMyCode": false,
 			"args": [
 				"--config",
 				"./config_dev.json"

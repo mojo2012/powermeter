@@ -7,18 +7,17 @@ from typing import Union
 from broker.SwitchState import SwitchState
 
 
-class UsageData:
+class PlugWiseUsageData:
     unix_timestamp: int
     
-    power: Union[float, None]
-    temperature: Union[float, None]
-    switchState: Union[SwitchState, None]
-    latestMotion: Union[datetime, None]
+    watts_1s: float
+    watts_8s: float
+    watts_1h: float
+    watts_production_1h: float
 
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
-    @property
     def isoTimestamp(self):
         return datetime.fromtimestamp(self.unix_timestamp).isoformat()
 
