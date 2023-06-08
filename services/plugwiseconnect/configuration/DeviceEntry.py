@@ -1,6 +1,6 @@
 from typing import List, Union
 from configuration.DeviceType import DeviceType
-from configuration.DeviceCapability import DeviceCapability
+from configuration.DeviceCapability import DeviceCapability, forString
 
 
 class DeviceEntry:
@@ -13,7 +13,7 @@ class DeviceEntry:
     password: Union[str, None]
     capabilities: List[DeviceCapability]
 
-    def __init__(self, address: str, name: str, type: DeviceType, category: str, master=False, username = None, password = None, capabilities: List[DeviceCapability] = []):
+    def __init__(self, address: str, name: str, type: DeviceType, category: str, master=False, username = None, password = None, capabilities: List[str] = []):
         self.address = address.upper()
         self.name = name
         self.username = username
@@ -24,7 +24,7 @@ class DeviceEntry:
         self.capabilities = []
         
         for cap in capabilities:
-            capability = DeviceCapability.forString(cap)
+            capability = forString(cap)
             
             if capability is not None:
                 self.capabilities.append(capability)

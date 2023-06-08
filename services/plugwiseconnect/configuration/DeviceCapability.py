@@ -8,9 +8,9 @@ class DeviceCapability(Enum):
 	PowerMeter = "PowerMeter"
 	PowerSwitch = "PowerSwitch"
 
-	def forString(string: str):
-		for val in DeviceCapability:
-			if str(val) == string:
-				return val
-			
-		return None
+def forString(string: str):
+	for val in DeviceCapability:
+		if str(val.name) == string:
+			return val
+		
+	return None
