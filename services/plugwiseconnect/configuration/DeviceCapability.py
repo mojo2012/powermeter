@@ -1,8 +1,8 @@
-from enum import Enum, StrEnum
+from enum import Enum
 from typing import Union
 
 
-class DeviceCapability(StrEnum):
+class DeviceCapability(Enum):
 	MotionSensor = "MotionSensor"
 	TemperatureSensor = "TemperatureSensor"
 	PowerMeter = "PowerMeter"

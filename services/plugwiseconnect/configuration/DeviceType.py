@@ -1,7 +1,7 @@
-from enum import Enum, StrEnum
+from enum import Enum
 
 
-class DeviceType(StrEnum):
+class DeviceType(Enum):
 	Dummy = "Dummy"
 	PlugwiseCircle = "PlugwiseCircle"
 	MyStromSwitch = "MyStromSwitch"
