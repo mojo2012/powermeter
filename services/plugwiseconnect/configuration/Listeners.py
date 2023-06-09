@@ -1,4 +1,5 @@
 from types import SimpleNamespace
+from typing import Union
 
 from configuration.HttpClientConfig import HttpClientConfig
 from configuration.MqttClientConfig import MqttClientConfig
@@ -6,9 +7,9 @@ from configuration.DbClientConfig import DbClientConfig
 
 
 class Listeners:
-    http: HttpClientConfig | None
-    mqtt: MqttClientConfig | None
-    db: DbClientConfig | None
+    http: Union[HttpClientConfig, None]
+    mqtt: Union[MqttClientConfig, None]
+    db: Union[DbClientConfig, None]
 
     def __init__(self, data: SimpleNamespace, rootPath: str):
         if hasattr(data, "http") and data.http:
