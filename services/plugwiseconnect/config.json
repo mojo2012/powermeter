@@ -3,7 +3,6 @@
 	"serialPortMacAddress": "000D6F00028FCC5B",
 	"readInterval": 5,
 	"logLevel": "INFO",
-	"storageLocation": "../../logs/plugwiseconnect/",
 	"listeners": {
 		"http": {
 			"url": "https://postman-echo.com/post",
@@ -12,6 +11,9 @@
 		"mqtt": {
 			"host": "localhost",
 			"port": 1883
+		},
+		"db": {
+			"storageLocation": "../../logs/plugwiseconnect/"
 		}
 	},
 	"devices": [

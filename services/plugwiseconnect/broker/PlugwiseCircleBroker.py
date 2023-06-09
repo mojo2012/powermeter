@@ -126,11 +126,14 @@ class PlugwiseCircleBroker(Broker):
             device = self._registeredDevices.get(configEntry.address)
 
             if device is not None and message is not None and message.switchState is not None:
-                info(f"Switching {configEntry.name} to '{message.switchState}'")
+                # fetch current relay/switch state
+                device.get_info()
 
-                if message.switchState is SwitchState.ON:
+                info(f"Switching {configEntry.name} from {device.relay_state} to '{message.switchState}'")
+
+                if message.switchState is SwitchState.ON and device.relay_state != 'on':
                     device.switch_on()
-                elif message.switchState is SwitchState.OFF:
+                elif message.switchState is SwitchState.OFF and device.relay_state != 'off':
                     device.switch_off()
 
     def fetchDeviceState(self, configEntry: DeviceEntry):

@@ -18,7 +18,6 @@ class Configuration:
     serialPort: str
     serialPortAddress: str
     logLevel: str
-    storageFileLocation: str
 
     # connector settings
     httpServer: HttpServerConfig
@@ -35,17 +34,8 @@ class Configuration:
         self.logLevel = config.logLevel
 
         if config.listeners:
-            self.listeners = Listeners(config.listeners)
+            self.listeners = Listeners(config.listeners, rootPath)
         
-        storageLocation: str = config.storageLocation
-
-        if storageLocation:
-            if storageLocation.startswith("."):
-                storageLocation = os.path.join(self._rootPath, Path(storageLocation))
-
-            self.storageFileLocation = str(
-                Path(os.path.join(Path(storageLocation), Path("usageData.sqlite"))).resolve().absolute())
-
         for device in config.devices:
             username = None
             password = None

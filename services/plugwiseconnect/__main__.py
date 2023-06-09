@@ -85,10 +85,10 @@ try:
             self.brokers.append(DLinkHNAP1Broker(config))
 
             for broker in self.brokers:
-                if config.storageFileLocation:
-                    broker.registerObserver(SqLiteStorageObserver(config.storageFileLocation))
-
                 if config.listeners is not None:
+                    if config.listeners.db is not None:
+                        broker.registerObserver(SqLiteStorageObserver(config.listeners.db))
+
                     if config.listeners.http is not None:
                         broker.registerObserver(HttpClientObserver(config.listeners.http))
 
