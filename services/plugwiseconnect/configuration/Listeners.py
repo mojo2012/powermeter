@@ -6,16 +6,16 @@ from configuration.DbClientConfig import DbClientConfig
 
 
 class Listeners:
-    http: HttpClientConfig
-    mqtt: MqttClientConfig
-    db: DbClientConfig
+    http: HttpClientConfig | None
+    mqtt: MqttClientConfig | None
+    db: DbClientConfig | None
 
     def __init__(self, data: SimpleNamespace, rootPath: str):
-        if data.http:
+        if hasattr(data, "http") and data.http:
             self.http = HttpClientConfig(data.http.__dict__)
 
-        if data.mqtt:
+        if hasattr(data, "mqtt") and data.mqtt:
             self.mqtt = MqttClientConfig(data.mqtt.__dict__)
 
-        if data.mqtt:
+        if hasattr(data, "db") and data.db:
             self.db = DbClientConfig(rootPath, data.db.__dict__)
