@@ -1,0 +1,10 @@
+[Unit]
+Description=PlugwiseConnect
+After=multi-user.target
+[Service]
+Type=simple
+Restart=always
+ExecStartPre=/opt/victronenergy/serial-starter/stop-tty.sh ttyUSB0; sleep 5;
+ExecStart=/usr/bin/python3 /data/powermeter/services/plugwiseconnect/run.sh
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "*** starting plugwiseconnect ***"
+exec 2>&1
+exec /data/powermeter/services/plugwiseconnect/run.sh;
