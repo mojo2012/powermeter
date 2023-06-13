@@ -86,6 +86,8 @@ class DLinkHNAP1Broker(Broker):
 
                 if configEntry.isPowerMeter and switch is SwitchState.ON:
                     usage = device.current_consumption
+                else:
+                    usage = 0
 
                 data: UsageData = UsageData(
                     unix_timestamp = time.time(), 
