@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pip3 install plugwise
+pip3 install plugwise --no-deps
 pip3 install requests
 pip3 install serial
 pip3 install defusedxml
