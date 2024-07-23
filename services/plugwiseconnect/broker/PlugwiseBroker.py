@@ -1,27 +1,24 @@
 import time
 from datetime import datetime, timedelta
 from logging import debug, error, info, warn
-from typing import Dict, List
+from threading import Thread
+from typing import Dict
 
-from broker import Observer
+from broker.DeviceBroker import DeviceBroker
 from configuration.Configuration import Configuration
 from configuration.DeviceEntry import DeviceEntry
 from configuration.DeviceType import DeviceType
 from plugwise.api import Circle, Stick
 
 
-class PlugwiseBroker:
+class PlugwiseBroker(DeviceBroker):
     """
     The main server that coordinates the devices and broadcasts provides the results via HTTP and other interfaces
     """
 
-    _config: Configuration
-
     _serialPort: Stick
     _registeredNodes: Dict[str, Circle] = {}
     _registeredMasterNode: Circle
-
-    _observers: List[Observer] = []
 
     def __init__(self, config: Configuration):
         self._config = config
@@ -133,39 +130,39 @@ class PlugwiseBroker:
         except Exception as ex:
             error(f'Could not get power usage data from {node.name}: {node.mac}: {str(ex)}')
 
-    def registerObserver(self, observer: Observer):
-        self._observers.append(observer)
-
     def checkIfSupportedNodesAvailable(self) -> bool:
         supportedDevices = list(filter(lambda d: d.type == DeviceType.PlugwiseCircle, self._config.devices))
 
         return len(supportedDevices) > 0
 
+    def _observeNodes(self, observeNodes: bool, infosPrinted = False):
+        while self._started:
+            for macAddress in self._registeredNodes.keys():
+                node: Circle = self._registeredNodes[macAddress]
+
+                if not infosPrinted:
+                    infosPrinted = True
+                    nodeInfo = node.get_info()
+                    info(f'Node info for {node.name} ({node.mac}): {nodeInfo}')
+
+                if observeNodes:
+                    self.updateNodeState(node)
+
+            # time.sleep(self._config.readInterval)
+            time.sleep(10)
 
     def start(self, observeNodes: bool):
+        self._started = True
+
         if self.checkIfSupportedNodesAvailable() == True:
             portConnected = self.connectToSerialPort()
 
             if portConnected:
                 self.connectToNodes()
 
+                thread = Thread(target=self._observeNodes, args=(observeNodes, False))
+                thread.start()
+
                 info("Plugwise broker started")
-
-                infosPrinted = False
-
-                while True:
-                    for macAddress in self._registeredNodes.keys():
-                        node: Circle = self._registeredNodes[macAddress]
-
-                        if not infosPrinted:
-                            infosPrinted = True
-                            nodeInfo = node.get_info()
-                            info(f'Node info for {node.name} ({node.mac}): {nodeInfo}')
-
-                        if observeNodes:
-                            self.updateNodeState(node)
-
-                    # time.sleep(self._config.readInterval)
-                    time.sleep(10)
         else:
             warn("Plugwise broker: no supported devices")

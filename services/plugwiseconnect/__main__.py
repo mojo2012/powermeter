@@ -4,8 +4,11 @@ import os
 import sys
 from logging import info
 from pathlib import Path
+from signal import SIGINT, signal
+from time import sleep
 
 from broker import PlugwiseBroker
+from broker.DummyBroker import DummyBroker
 from configuration.Configuration import Configuration, readConfig
 from log.CustomFormatter import CustomFormatter
 from observers.HttpClientObserver import HttpClientObserver
@@ -44,6 +47,11 @@ def setupLogging(config: Configuration):
 
     pass
 
+def handleSignal(signal_received, frame):
+    # Handle any cleanup here
+    print("Stopping ...")
+    exit(0)
+
 def run():
     programArguments = initArgParse().parse_args()
     configFileArg: str = os.path.abspath(programArguments.config[0])
@@ -55,6 +63,7 @@ def run():
     info("Starting plugwiseconnect")
 
     plugwiseBroker = PlugwiseBroker(config)
+    dummyBroker = DummyBroker(config)
 
     if config.storageFileLocation:
         plugwiseBroker.registerObserver(SqLiteStorageObserver(config.storageFileLocation))
@@ -62,13 +71,23 @@ def run():
     if config.listeners is not None:
         if config.listeners.http is not None:
             plugwiseBroker.registerObserver(HttpClientObserver(config.listeners.http))
+            dummyBroker.registerObserver(HttpClientObserver(config.listeners.http))
 
         if config.listeners.mqtt is not None:
             plugwiseBroker.registerObserver(MqttClientObserver(config.listeners.mqtt))
+            dummyBroker.registerObserver(MqttClientObserver(config.listeners.mqtt))
 
     plugwiseBroker.registerObserver(LoggingObserver())
 
     plugwiseBroker.start(True)
+    dummyBroker.start(True)
+
+    # Tell Python to run the handler() function when SIGINT is recieved
+    signal(SIGINT, handleSignal)
+
+    while True:
+        sleep(0.1)
+
 
 try:
     run()
