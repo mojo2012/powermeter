@@ -4,16 +4,9 @@
 	"readInterval": 5,
 	"logLevel": "INFO",
 	"listeners": {
-		"http": {
-			"url": "https://postman-echo.com/post",
-			"authorization": "Bearer 324567890"
-		},
 		"mqtt": {
-			"host": "localhost",
+			"host": "10.0.0.109",
 			"port": 1883
-		},
-		"db": {
-			"storageLocation": "../../logs/plugwiseconnect/"
 		}
 	},
 	"devices": [
