@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from logging import debug, error, info, warn
 from typing import Dict, List, Union
 import xml.etree.ElementTree as ET
-import xmltodict
 
 from broker import Observer
 from configuration.Configuration import Configuration
@@ -37,7 +36,7 @@ class DLinkHNAP1Broker(Broker):
     def checkConnection(self, configEntry: DeviceEntry) -> bool:
         try:
             urlopen(f"http://{configEntry.address}", timeout=1)
-        except URLError:
+        except (URLError, TimeoutError):
             return False
 
         return True
